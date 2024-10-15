@@ -1,0 +1,25 @@
+{
+  "name": "bot-wa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.7.7",
+    "axios": "^1.7.7",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.0",
+    "link-preview-js": "^3.0.5",
+    "moment-timezone": "^0.5.45",
+    "mysql2": "^3.11.3",
+    "node-schedule": "^2.1.1",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.7.5"
+  }
+}
