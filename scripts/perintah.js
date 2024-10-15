@@ -11,8 +11,6 @@ const db = mysql.createConnection({
 // Variabel untuk menangani eksekusi ganda
 let isProcessingGaransiId = false;
 let lastPendingMessageSent = false;
-let lastAddMessageSent = false; // Variabel untuk melacak pengiriman pesan .tambah
-let lastRemoveMessageSent = false; // Variabel untuk melacak pengiriman pesan .hapus
 
 // Ekspor fungsi untuk menangani perintah
 module.exports = (sock) => {
@@ -202,16 +200,17 @@ module.exports = (sock) => {
             }
 
             if (results.length > 0) {
-                results.forEach(garansi => {
-                    const idGaransi = garansi.id_garansi;
-                    // Kirim pesan jika status masih pending
+                results.forEach((row) => {
+                    const idGaransi = row.id_garansi;
+
                     if (!lastPendingMessageSent) {
-                        sock.sendMessage('6281271170052@s.whatsapp.net', { text: `Masih ada garansi pending dengan ID: ${idGaransi}` });
-                        lastPendingMessageSent = true; // Cegah pengiriman ganda
+                        // Kirim pesan ke admin untuk setiap garansi pending
+                        sock.sendMessage('6281271170052@s.whatsapp.net', { text: `Ada garansi pending dengan ID: ${idGaransi}` });
                     }
                 });
+                lastPendingMessageSent = true; // Set flag bahwa pesan pending sudah dikirim
             } else {
-                lastPendingMessageSent = false; // Reset jika tidak ada garansi pending
+                lastPendingMessageSent = false; // Reset flag jika tidak ada garansi pending
             }
         });
     }, 60000); // 1 menit
