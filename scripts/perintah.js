@@ -191,4 +191,28 @@ module.exports = (sock) => {
             }
         }
     });
+
+    // Cek status garansi setiap 1 menit
+    setInterval(() => {
+        // Ambil semua garansi dengan status 'pending'
+        db.query('SELECT id_garansi FROM garansi WHERE status = "pending"', (error, results) => {
+            if (error) {
+                console.error('Error retrieving pending garansi:', error);
+                return;
+            }
+
+            if (results.length > 0) {
+                results.forEach(garansi => {
+                    const idGaransi = garansi.id_garansi;
+                    // Kirim pesan jika status masih pending
+                    if (!lastPendingMessageSent) {
+                        sock.sendMessage('6281271170052@s.whatsapp.net', { text: `Masih ada garansi pending dengan ID: ${idGaransi}` });
+                        lastPendingMessageSent = true; // Cegah pengiriman ganda
+                    }
+                });
+            } else {
+                lastPendingMessageSent = false; // Reset jika tidak ada garansi pending
+            }
+        });
+    }, 60000); // 1 menit
 };
